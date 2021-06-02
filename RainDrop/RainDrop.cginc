@@ -164,48 +164,6 @@ RainDropData MixStaticDynamic(float3 normal,float3 causticNormal,float2 mask,
     return rain;
 }
 
-// RainDropData MixStaticDynamicLight(float3 normal,float3 causticNormal,float2 mask,
-// 									float3 dropNormal,float3 dropCausticNormal,float2 dropMask,
-// 									float3 worldPos,float3x3 tanToWorld)
-// {
-//     RainDropData rain=(RainDropData)0;
-
-//     float3 viewDir=normalize(UnityWorldSpaceViewDir(worldPos));
-//     float3 lightDir=normalize(float3(-0.3,1,-0.3));
-//     //float3 lightDir=normalize(UnityWorldSpaceLightDir(worldPos));
-//     float3 halfDir=normalize(viewDir+lightDir);
-//     float3 yDir=float3(0,1,0);
-
-//     fixed downMask=mask.x+dropMask.x;
-//     fixed riseMask=mask.y+dropMask.y;
-
-//     float3 riseNormal=lerp(normal,dropNormal,dropMask.y);
-//     //float3 useNormal=BlendNormals(riseNormal,float3(0,0,1));
-//     riseNormal=TransfromTanToWorld(riseNormal,tanToWorld);
-//     float RdotV=smoothstep(0.9,1.2,dot(riseNormal,halfDir));
-//     RdotV*=RdotV;
-
-//     float3 downNormal=lerp(causticNormal,dropCausticNormal,dropMask.x);
-//     float3 useNormal=BlendNormals(downNormal,float3(0,0,1));
-//     useNormal.z=_UseNormal;
-//     downNormal=TransfromTanToWorld(downNormal,tanToWorld);
-//     float DdotC=smoothstep(0.5,1.5,dot(downNormal,lightDir));
-//     DdotC*=DdotC;
-
-//     float RdotZ=smoothstep(-1.3,0.3,dot(yDir,riseNormal));
-//     fixed fullMask=saturate(lerp(1,RdotZ,riseMask)+downMask);
-//     //fixed fullMask=lerp(1,RdotZ,riseMask);
-
-//     fixed3 rainDiffuseColor=RdotV*downMask*10;
-//     fixed3 rainCausticColor=DdotC*downMask*4;
-
-//     rain.normal=useNormal;
-//     rain.rainColor=rainDiffuseColor+rainCausticColor;
-//     rain.fullMask=fullMask;
-    
-//     return rain;
-// }
-
 RainDropData RainDrop(float2 uv,float3 worldPos,float3x3 tanToWorld)
 {
     RainDropData rainData=(RainDropData)0;
@@ -246,8 +204,6 @@ RainDropData RainDrop(float2 uv,float3 worldPos,float3x3 tanToWorld)
 
     float3 viewDir=normalize(UnityWorldSpaceViewDir(worldPos));
     rainData=MixStaticDynamic(normal,causticNormal,mask,dropNormal,dropCausticNormal,rainDropMask,viewDir,tanToWorld);
-    // rainData=MixStaticDynamicLight(normal,causticNormal,mask,dropNormal,
-    //                 dropCausticNormal,rainDropMask,worldPos,tanToWorld);
     rainData.rainTrace=rainDropTrace;
 
     return rainData;
